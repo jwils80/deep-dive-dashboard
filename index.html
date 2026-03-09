@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 2: Deep Dive Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Sidebar / Nav -->
+    <nav class="sidebar">
+        <div class="brand">
+            <div class="lego-studs"></div>
+            <h1>Deep Dive</h1>
+            <span class="badge">Research Ops</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#overview"><span class="icon">◎</span> Project Overview</a></li>
+            <li><a href="#library"><span class="icon">📚</span> Reading Library</a></li>
+            <li><a href="#plan"><span class="icon">🗓️</span> Weekly Plan</a></li>
+            <li><a href="#prompts"><span class="icon">🤖</span> Prompt Log</a></li>
+            <li><a href="#experiments"><span class="icon">🧪</span> Experiment Log</a></li>
+            <li><a href="#links"><span class="icon">🔗</span> Quick Links</a></li>
+        </ul>
+        <div class="sidebar-bottom">
+            <button id="reset-btn" class="btn btn-danger">Reset Data</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="dashboard">
+        <!-- 1. Overview -->
+        <section id="overview" class="panel theme-blue">
+            <div class="panel-header">
+                <h2>Project Overview</h2>
+                <div class="status-indicator">Auto-saving...</div>
+            </div>
+            <div class="panel-body grid-2">
+                <div class="form-group">
+                    <label for="focus">Deep Dive Focus</label>
+                    <textarea id="focus" rows="3" class="autosave"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="question">Research Question</label>
+                    <textarea id="question" rows="3" class="autosave"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="goals">Project Goals</label>
+                    <textarea id="goals" rows="3" class="autosave"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="summary">Short Summary</label>
+                    <textarea id="summary" rows="3" class="autosave"></textarea>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Reading Library -->
+        <section id="library" class="panel theme-purple">
+            <div class="panel-header">
+                <h2>Reading Library</h2>
+                <div class="actions">
+                    <input type="text" id="library-search" placeholder="Search..." class="search-input">
+                    <button class="btn btn-primary" onclick="libraryModal.showModal()">+ Add Source</button>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="card-grid" id="library-grid">
+                    <!-- Cards rendered via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Weekly Plan -->
+        <section id="plan" class="panel theme-yellow">
+            <div class="panel-header">
+                <h2>Weekly Plan (Weeks 1-5)</h2>
+            </div>
+            <div class="panel-body">
+                <div class="timeline-container" id="weekly-container">
+                    <!-- Weeks rendered via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Prompt Log -->
+        <section id="prompts" class="panel theme-green">
+            <div class="panel-header">
+                <h2>Prompt Log</h2>
+                <button class="btn btn-primary" onclick="promptModal.showModal()">+ Add Prompt</button>
+            </div>
+            <div class="panel-body">
+                <div class="list-container" id="prompt-list">
+                    <!-- Prompts rendered via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Experiment Log -->
+        <section id="experiments" class="panel theme-orange">
+            <div class="panel-header">
+                <h2>Experiment Log</h2>
+                <button class="btn btn-primary" onclick="experimentModal.showModal()">+ Add Experiment</button>
+            </div>
+            <div class="panel-body">
+                <div class="card-grid masonry" id="experiment-grid">
+                    <!-- Experiments rendered via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Links -->
+        <section id="links" class="panel theme-red">
+            <div class="panel-header">
+                <h2>Quick Links</h2>
+                <button class="btn btn-primary" onclick="linkModal.showModal()">+ Add Link</button>
+            </div>
+            <div class="panel-body">
+                <div class="links-grid" id="links-grid">
+                    <!-- Links rendered via JS -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modals -->
+    <!-- Library Modal -->
+    <dialog id="libraryModal" class="modal">
+        <form method="dialog" id="libraryForm">
+            <h3>Add Reading Source</h3>
+            <div class="form-group"><label>Title</label><input type="text" id="lib-title" required></div>
+            <div class="form-group"><label>Author</label><input type="text" id="lib-author"></div>
+            <div class="form-group"><label>Link</label><input type="url" id="lib-link"></div>
+            <div class="form-group"><label>Tags (comma separated)</label><input type="text" id="lib-tags"></div>
+            <div class="form-group">
+                <label>Status</label>
+                <select id="lib-status">
+                    <option value="to-read">To Read</option>
+                    <option value="reading">Reading</option>
+                    <option value="finished">Finished</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Notes</label><textarea id="lib-notes" rows="3"></textarea></div>
+            <div class="modal-actions">
+                <button type="button" class="btn" onclick="libraryModal.close()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save Source</button>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- Prompt Modal -->
+    <dialog id="promptModal" class="modal">
+        <form method="dialog" id="promptForm">
+            <h3>Add AI Prompt</h3>
+            <div class="form-group"><label>Prompt</label><textarea id="pr-prompt" required rows="3"></textarea></div>
+            <div class="form-group"><label>Model Used</label><input type="text" id="pr-model"
+                    placeholder="e.g. GPT-4, Claude 3"></div>
+            <div class="form-group"><label>Output Summary</label><textarea id="pr-output" rows="2"></textarea></div>
+            <div class="form-group"><label>What I changed next</label><textarea id="pr-next" rows="2"></textarea></div>
+            <div class="modal-actions">
+                <button type="button" class="btn" onclick="promptModal.close()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save Prompt</button>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- Experiment Modal -->
+    <dialog id="experimentModal" class="modal">
+        <form method="dialog" id="experimentForm">
+            <h3>Log Experiment</h3>
+            <div class="form-group"><label>What I tried</label><textarea id="exp-tried" required rows="2"></textarea>
+            </div>
+            <div class="form-group"><label>Screenshot/Notes</label><textarea id="exp-notes"
+                    placeholder="Image URL or descriptive notes..." rows="2"></textarea></div>
+            <div class="form-group"><label>Outcome</label><textarea id="exp-outcome" required rows="2"></textarea></div>
+            <div class="form-group"><label>Next Step</label><input type="text" id="exp-next"></div>
+            <div class="modal-actions">
+                <button type="button" class="btn" onclick="experimentModal.close()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save Experiment</button>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- Link Modal -->
+    <dialog id="linkModal" class="modal">
+        <form method="dialog" id="linkForm">
+            <h3>Add Quick Link</h3>
+            <div class="form-group"><label>Label</label><input type="text" id="lk-label" required></div>
+            <div class="form-group"><label>URL</label><input type="url" id="lk-url" required></div>
+            <div class="modal-actions">
+                <button type="button" class="btn" onclick="linkModal.close()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save Link</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
